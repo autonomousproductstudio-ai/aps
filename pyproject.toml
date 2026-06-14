@@ -1,0 +1,43 @@
+[project]
+name = "autonomous-product-studio"
+version = "0.1.0"
+description = "Multi-agent studio: idea -> startup execution package"
+requires-python = ">=3.11"
+dependencies = [
+  "langgraph>=0.2",
+  "langchain>=0.3",
+  "langchain-google-genai>=2.0",   # Gemini free tier (ADR-0002)
+  "langchain-openai>=0.2",          # OpenAI + all OpenAI-compatible providers (NIM, Groq, Cerebras…)
+  "langchain-anthropic>=0.3",       # Anthropic/Claude provider (failover chain)
+  "google-auth>=2.0",               # verifies Firebase ID tokens in /v1 auth (firebase_auth.py)
+  "pydantic>=2.7",
+  "pydantic-settings>=2.3",
+  "fastapi>=0.111",
+  "uvicorn>=0.30",
+  "requests>=2.32",
+  "structlog>=24.1",
+  "tenacity>=8.3",
+  "prometheus-client>=0.20",
+  "cachetools>=5.3",                # read-through TTL cache for retrieval tools (plan 1.2)
+  "dodopayments>=1.0",              # Dodo Payments hosted checkout + subscriptions (billing)
+  "standardwebhooks>=1.0",          # verifies Dodo webhook signatures (Standard Webhooks spec)
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5", "pytest-asyncio>=0.23"]
+trends = ["pytrends>=4.9"]   # unlocks live Google Trends in trends_interest (W4)
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+# Make `import aps` work straight from the source tree without `pip install -e`,
+# so the suite runs in a minimal env (pydantic + pytest). See memory.md §2.
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+asyncio_default_fixture_loop_scope = "function"
+markers = ["live: needs a live LLM key; skipped by default and never run in CI"]
