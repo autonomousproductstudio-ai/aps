@@ -361,7 +361,7 @@ export default function LoginPage() {
       <style>{CSS}</style>
 
       {/* ── LEFT: untouched ──────────────────────────────── */}
-      <div className="hidden lg:flex" style={{ width: '50%', flexShrink: 0 }}>
+      <div className="hidden md:flex" style={{ width: '50%', flexShrink: 0 }}>
         <AuthLeftPanel />
       </div>
 
