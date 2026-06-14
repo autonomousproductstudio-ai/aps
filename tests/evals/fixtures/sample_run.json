@@ -1,0 +1,22 @@
+{
+  "run_id": "run_mock1",
+  "idea": "Build an AI SaaS for resume screening",
+  "events": [
+    {"type":"agent_start","data":{"agent":"research"}},
+    {"type":"tool_call","data":{"agent":"research","tool":"github_list_issues","args":{"repo":"example/ats"}}},
+    {"type":"tool_result","data":{"tool":"github_list_issues","ok":true,"evidence_count":7}},
+    {"type":"tool_call","data":{"agent":"research","tool":"hn_search","args":{"query":"resume ai"}}},
+    {"type":"tool_result","data":{"tool":"hn_search","ok":true,"evidence_count":12}},
+    {"type":"tool_call","data":{"agent":"research","tool":"reddit_search","args":{"query":"ats pain"}}},
+    {"type":"tool_result","data":{"tool":"reddit_search","ok":false,"evidence_count":0}},
+    {"type":"tool_call","data":{"agent":"research","tool":"extract_pain_points","args":{}}},
+    {"type":"tool_result","data":{"tool":"extract_pain_points","ok":true,"evidence_count":0}},
+    {"type":"artifact_ready","data":{"name":"research"}},
+    {"type":"agent_end","data":{"agent":"research"}},
+    {"type":"agent_start","data":{"agent":"product"}},
+    {"type":"tool_call","data":{"agent":"product","tool":"assemble_prd","args":{}}},
+    {"type":"artifact_ready","data":{"name":"prd"}},
+    {"type":"agent_end","data":{"agent":"product"}},
+    {"type":"run_complete","data":{"status":"complete","tool_calls":31}}
+  ]
+}

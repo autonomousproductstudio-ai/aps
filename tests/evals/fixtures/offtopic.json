@@ -1,0 +1,18 @@
+{
+  "idea": "Private Activity Tracker",
+  "junk": [
+    {"source": "github", "title": "Stake bonus cannot be reached", "snippet": "the stake bonus cannot be reached after the deposit"},
+    {"source": "jobs", "title": "High-Ticket Financial Sales Specialist & Team Lead Track @ FSE LLC", "snippet": "high-ticket financial sales role, commission and bonus"},
+    {"source": "jobs", "title": "Senior Data Scientist @ Lemon.io", "snippet": "hiring a senior data scientist contractor, remote"},
+    {"source": "jobs", "title": "Freelance Writer @ IAPWE", "snippet": "freelance writing gig, paid per article"},
+    {"source": "github", "title": "API: sun position", "snippet": "endpoint returns the sun position for a given coordinate and time"},
+    {"source": "github", "title": "Google Container Breaks UBlock YouTube Filters", "snippet": "youtube adblock filters break inside the google container extension"},
+    {"source": "jobs", "title": "Inside Sales Contractor @ Credit Wellness", "snippet": "inside sales contractor, mortgage and loan leads"}
+  ],
+  "relevant": [
+    {"source": "hackernews", "title": "Ask HN: privacy-respecting activity trackers?", "snippet": "looking for a private activity tracker that does not sell my data"},
+    {"source": "github", "title": "TakaTime privacy-first activity tracker", "snippet": "self-hosted privacy-first coding activity tracking, local only"},
+    {"source": "github", "title": "ActivityWatch does not detect idle state", "snippet": "the activity tracker fails to detect idle time on linux"},
+    {"source": "hackernews", "title": "Show HN: a private-by-design activity tracker", "snippet": "automatic activity tracking on your phone, privacy by design"}
+  ]
+}
