@@ -1,0 +1,23 @@
+# Mirror of pyproject for pip users. Pin versions to current free-tier-compatible releases.
+langgraph
+langchain
+langchain-google-genai
+langchain-openai
+langchain-anthropic
+google-auth
+pydantic
+pydantic-settings
+fastapi
+uvicorn
+requests
+structlog
+tenacity
+prometheus-client
+dodopayments
+standardwebhooks
+pytest
+ruff
+pytest-asyncio
+# optional (W4): unlocks live Google Trends in trends_interest. Install with
+#   pip install -e ".[trends]"   (kept out of the default install to stay lightweight)
+# pytrends>=4.9
