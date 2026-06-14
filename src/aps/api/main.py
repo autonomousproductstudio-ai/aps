@@ -17,10 +17,13 @@ import threading
 import time
 import uuid
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse, PlainTextResponse, HTMLResponse
+from fastapi.responses import (
+    StreamingResponse, PlainTextResponse, HTMLResponse, FileResponse,
+)
 from pydantic import BaseModel
 
 from aps.config.settings import (
@@ -61,6 +64,12 @@ async def _lifespan(app: FastAPI):
 
 app = FastAPI(title="Autonomous Product Studio", lifespan=_lifespan)
 setup_metrics(app)   # mounts /metrics when prometheus_client is installed (no-op otherwise)
+
+# Built SPA (Vite output). When present, this backend serves the React app from the SAME
+# origin as the API (see the catch-all at the bottom of this module). main.py lives at
+# src/aps/api/main.py → parents[3] is the repo root that holds frontend/dist.
+_FRONTEND_DIST = Path(__file__).resolve().parents[3] / "frontend" / "dist"
+_DIST_INDEX = _FRONTEND_DIST / "index.html"
 
 # CORS so the Vite dev frontend (localhost:5173) can call this API from the browser.
 _cors = [o.strip() for o in get_settings().cors_origins.split(",") if o.strip()]
@@ -112,7 +121,15 @@ setInterval(()=>{if($('#auto').checked)pull();},2000); pull();
 </script></body></html>"""
 
 
-@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/", include_in_schema=False)
+def index():
+    """Serve the SPA when it's built; otherwise fall back to the log console."""
+    if _DIST_INDEX.is_file():
+        return FileResponse(_DIST_INDEX)
+    return HTMLResponse(_LOG_VIEWER_HTML)
+
+
+@app.get("/logs", response_class=HTMLResponse, include_in_schema=False)
 def log_viewer() -> str:
     """Browser log console — live-tails the in-memory buffer (uvicorn/httpx/429/our events)."""
     return _LOG_VIEWER_HTML
@@ -632,3 +649,32 @@ app.mount("/v1", v1_app)
 from aps.api.billing import router as billing_router  # noqa: E402
 
 app.include_router(billing_router)
+
+# ── Same-origin SPA (frontend/dist) ─────────────────────────────────────────────────────
+# When the Vite build output is present, this backend ALSO serves the React app, so the
+# SPA's relative `/v1` + `/api` calls and WebSocket upgrades hit the same host — no CORS,
+# no separate frontend service, no backend URL baked into the build. Registered LAST so
+# every API route plus the `/v1` and `/api` mounts above take precedence; the catch-all
+# only handles paths the API never claimed (client-side routes → index.html).
+if _FRONTEND_DIST.is_dir():
+    from fastapi.staticfiles import StaticFiles  # noqa: E402
+
+    _assets_dir = _FRONTEND_DIST / "assets"
+    if _assets_dir.is_dir():
+        app.mount("/assets", StaticFiles(directory=_assets_dir), name="assets")
+
+    # Reserved first-path-segments that belong to the API — return JSON 404 instead of the
+    # SPA so a wrong API path stays an honest 404 rather than silently serving HTML.
+    _API_SEGMENTS = {
+        "v1", "api", "runs", "models", "health", "providers", "stats",
+        "metrics", "logs", "logs.json", "docs", "redoc", "openapi.json",
+    }
+
+    @app.get("/{spa_path:path}", include_in_schema=False)
+    def spa(spa_path: str):
+        if spa_path.split("/", 1)[0] in _API_SEGMENTS:
+            raise HTTPException(status_code=404)
+        candidate = _FRONTEND_DIST / spa_path
+        if spa_path and candidate.is_file():
+            return FileResponse(candidate)
+        return FileResponse(_DIST_INDEX)
