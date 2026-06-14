@@ -1,0 +1,10 @@
+[
+  {"id":"g01","idea":"Build an AI SaaS for resume screening","expect_sources":["github","hackernews","reddit"],"min_evidence":5},
+  {"id":"g02","idea":"A marketplace for renting camera gear between creators","expect_sources":["reddit","web"],"min_evidence":4},
+  {"id":"g03","idea":"An open-source observability tool for LangGraph agents","expect_sources":["github","hackernews","arxiv"],"min_evidence":5},
+  {"id":"g04","idea":"A mobile app that turns receipts into expense reports","expect_sources":["web","reddit"],"min_evidence":4},
+  {"id":"g05","idea":"A Chrome extension that summarizes long GitHub issues","expect_sources":["github","hackernews"],"min_evidence":4},
+  {"id":"g06","idea":"A B2B tool for automated SOC2 evidence collection","expect_sources":["web","reddit"],"min_evidence":4},
+  {"id":"g07","idea":"A privacy-first habit tracker with local-only data","expect_sources":["reddit","web"],"min_evidence":3},
+  {"id":"g08","idea":"A platform connecting clinical trials to eligible patients","expect_sources":["web","arxiv"],"min_evidence":4}
+]
