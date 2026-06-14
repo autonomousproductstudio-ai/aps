@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Theme tokens. DARK (default) values are the exact originals → dark mode is unchanged.
+   `html.light` swaps them for a warm, workweave-style light palette. Values are space-separated
+   R G B so Tailwind's `/<alpha-value>` opacity modifiers (e.g. border-white/[0.05]) keep working. */
+:root {
+  color-scheme: dark;
+  --c-bg: 17 20 23;              /* #111417 */
+  --c-bg-deep: 13 15 20;         /* #0D0F14 */
+  --c-surface: 19 22 30;         /* #13161E card */
+  --c-surface-hover: 26 30 42;   /* #1A1E2A */
+  --c-surface-low: 25 28 31;     /* #191c1f */
+  --c-surface-mid: 29 32 35;     /* #1d2023 */
+  --c-surface-high: 40 42 46;    /* #282a2e */
+  --c-surface-highest: 50 53 57; /* #323539 */
+  --c-surface-lowest: 12 14 18;  /* #0c0e12 */
+  --c-surface-bright: 55 57 61;  /* #37393d */
+  --c-input: 10 12 16;           /* #0A0C10 */
+  --c-border: 30 36 53;          /* #1E2435 */
+  --c-outline: 133 147 153;      /* #859399 */
+  --c-outline-variant: 60 73 78; /* #3c494e */
+  --c-text: 225 226 231;         /* #e1e2e7 */
+  --c-text-strong: 232 234 240;  /* #E8EAF0 */
+  --c-text-muted: 187 201 207;   /* #bbc9cf */
+  --c-text-secondary: 139 146 165; /* #8B92A5 */
+  --c-text-hint: 74 81 96;       /* #4A5160 */
+  --c-inverse-on-surface: 46 49 52; /* #2e3134 */
+  --c-primary: 165 231 255;      /* #a5e7ff */
+  --c-accent-cyan: 0 229 255;    /* #00E5FF */
+  --c-overlay: 255 255 255;      /* white overlays */
+  --c-page: 17 20 23;            /* body/#root background */
+  --c-deep: 10 12 18;            /* inline #0A0C1x panels */
+  --c-deepest: 6 8 13;           /* inline rgba(6,8,13) ambient/deepest */
+  --c-black: 0 0 0;              /* bg-black/x recessed panels */
+}
+
+html.light {
+  color-scheme: light;
+  --c-bg: 250 249 246;           /* warm cream */
+  --c-bg-deep: 255 255 255;      /* nav / deep areas → white */
+  --c-surface: 255 255 255;      /* cards → white */
+  --c-surface-hover: 245 244 240;
+  --c-surface-low: 249 248 245;
+  --c-surface-mid: 245 244 240;
+  --c-surface-high: 239 238 232;
+  --c-surface-highest: 233 231 224;
+  --c-surface-lowest: 252 251 249;
+  --c-surface-bright: 255 255 255;
+  --c-input: 255 255 255;
+  --c-border: 228 226 220;       /* warm light border */
+  --c-outline: 122 126 136;
+  --c-outline-variant: 223 221 214;
+  --c-text: 22 26 33;            /* near-black slate */
+  --c-text-strong: 13 15 20;
+  --c-text-muted: 45 51 63;      /* much darker so low-alpha labels read on cream */
+  --c-text-secondary: 60 66 80;
+  --c-text-hint: 96 102 116;
+  --c-inverse-on-surface: 240 240 236;
+  --c-primary: 14 116 144;       /* deep teal — legible accent on light */
+  --c-accent-cyan: 8 145 178;    /* cyan-600 */
+  --c-overlay: 18 22 32;         /* dark overlays/text on light (was white) — darker for legibility */
+  --c-page: 250 249 246;
+  --c-deep: 255 255 255;         /* panels → white */
+  --c-deepest: 252 251 248;      /* deepest → faint warm white */
+  --c-black: 243 241 236;        /* bg-black/x → faint warm tint (clean nested panel, not a gray box) */
+}
+
+html, body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background: rgb(var(--c-page));
+  overflow-x: hidden;
+  scroll-behavior: auto;
+}
+
+#root {
+  min-height: 100vh;
+  background: rgb(var(--c-page));
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: rgb(var(--c-text));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Light-mode overrides for the handful of INLINE dark hex backgrounds the pages use
+   (these bypass the token system). Maps each dark panel hex → a light surface. ── */
+html.light [class*="bg-[#0A0C11]"],
+html.light [class*="bg-[#09090E]"],
+html.light [class*="bg-[#0B0D12]"],
+html.light [class*="bg-[#05070A]"],
+html.light [class*="bg-[#0D0F16]"],
+html.light [class*="bg-[#0C0E14]"],
+html.light [class*="bg-[#080A0F]"],
+html.light [class*="bg-[#0A0C10]"] { background-color: rgb(var(--c-surface)) !important; }
+html.light .glass-panel { background: rgba(255, 255, 255, 0.72) !important; border-color: rgba(14,116,144,0.18) !important; }
+
+/* Dark gradient backdrops (the nav + page backdrops use `from/via/to-[#0x0x]`). A `via-` bakes its
+   color straight into --tw-gradient-stops, so per-stop overrides can't reach it — override the whole
+   stops list instead. This reliably flips the nav + every dark gradient panel to a soft light wash. */
+html.light [class*="from-[#06080D]"],
+html.light [class*="from-[#0A0C12]"],
+html.light [class*="via-[#0A0C14]"],
+html.light [class*="to-[#0D1018]"],
+html.light [class*="to-[#0D1016]"] {
+  --tw-gradient-stops: rgb(var(--c-bg-deep) / 0.97), rgb(var(--c-surface) / 0.94), rgb(var(--c-bg-deep) / 0.97) !important;
+}
+/* The ambient radial glow + node glows read muddy on cream — soften to the teal accent. */
+html.light .ambient-glow { background: radial-gradient(circle at 50% 50%, rgba(14,116,144,0.05) 0%, transparent 70%) !important; }
+html.light .glow-blue { box-shadow: 0 0 30px rgba(14,116,144,0.12) !important; }
+html.light { --tw-shadow-color: rgba(0,0,0,0.08); }
+
+@layer components {
+    .glass-panel {
+        background: rgba(17, 20, 23, 0.7);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(165, 231, 255, 0.15);
+    }
+    .glow-blue {
+        box-shadow: 0 0 30px rgba(71, 214, 255, 0.15);
+    }
+    .pipeline-connector {
+        background: linear-gradient(90deg, transparent, #47d6ff, transparent);
+        background-size: 200% 100%;
+        animation: flow 3s linear infinite;
+    }
+    @keyframes flow {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .page-content-wrapper {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: pageReveal 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes pageReveal {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .stagger-in > * {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .terminal-scroll {
+        mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+    }
+    .node-active {
+        box-shadow: 0 0 25px rgba(71, 214, 255, 0.4);
+        border-color: rgba(71, 214, 255, 0.6);
+    }
+    .ambient-glow {
+        background: radial-gradient(circle at 50% 50%, rgba(71, 214, 255, 0.05) 0%, transparent 70%);
+    }
+
+    .global-header {
+        height: 64px;
+        max-width: 1440px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
